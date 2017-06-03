@@ -14,8 +14,8 @@ class LoadDataAPI(object):
         return data_file
 
     def printData(self,data_file):
-        print(data_file[50:])
-        print(data_file.tail())
+        print(data_file[:3])
+        #print(data_file.tail())
 
     # Guardamos en un archivo csv, los datos de un DataFrame en un path especifico.
     def save_data(self,path,df):
@@ -25,6 +25,8 @@ class LoadDataAPI(object):
     def windowize_series(self, data, size=2, horizon=1, column_indexes=None):
         '''Last column of the dataframe must be the target Y.
     	'''
+
+        #print (all_indexes)
         if type(data).__module__ != np.__name__:
             raise('The data must be a numpy array.')
         if data is None or data.size == 0:
@@ -45,6 +47,7 @@ class LoadDataAPI(object):
         for i in range(num_windows):
             if column_indexes is None:
                 X[i, :] = np.reshape(data[i:i+size, :], size*data.shape[1], order='F')
+                print (X)
             else:
                 input_vector = np.reshape(data[i:i+size, column_indexes], input_vector_length - len(ignored_indexes), order='F')
                 input_vector = np.insert(input_vector, 0, data[i, ignored_indexes])
@@ -70,10 +73,10 @@ def main():
     loadDataApi.printData(data_file)
 
     loadDataApi.save_data(save_file_path,data_file)
-
+    print("\t Generate windowize series \n\n")
     X,Y=loadDataApi.windowize_series(data_file.as_matrix(),4,1)
 
-    print(X)
+    #print(X)
 
 if __name__ == '__main__':
 	main()
