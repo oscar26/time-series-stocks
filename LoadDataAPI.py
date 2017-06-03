@@ -7,7 +7,6 @@ from os.path import isfile
 
 class LoadDataAPI(object):
 
-
     def loadDataFromAPI(self,stock, start,end,API):
         #Carga de datos de  Google Finance API
         data_file = web.DataReader(stock, API, start, end)
@@ -33,29 +32,36 @@ class LoadDataAPI(object):
         data = df.reindex(columns=new_column_order)
         return data
 
+    def beginLoadData(self):
+        loadDataApi=LoadDataAPI();
+        # Abreviatura de algunas Empresas
+        stocks = ['AAPL','AMZN','BABA','BAC','FB','NKE','NVDA','TSLA','IBM','MSFT']
+        # Google Finance API
+        API='google'
+        dataFrameList={}
+
+        # Intervalo de tiempo para carga de los datos[start-end]
+        #Fecha de Inicio
+        start = datetime.datetime(2009, 1, 1)
+        #Fecha Fin
+        end = datetime.datetime(2017, 6, 3)
+
+        for stock in stocks:
+            save_file_path = 'datasets/'+stock+'business.csv'
+            data_file=loadDataApi.loadDataFromAPI(stock,start,end,API)
+            data_proccess=loadDataApi.preprocess_data(data_file)
+            #loadDataApi.printData(data_proccess)
+
+            loadDataApi.save_data(save_file_path,data_proccess)
+            dataFrameList[stock]=data_proccess
+
+        print("\t ***   Finalized  data load    ***\n")
+
+        return dataFrameList
+
 def main():
-    loadDataApi=LoadDataAPI();
-    # Abreviatura de algunas Empresas
-    stocks = ['AAPL','ORCL', 'TSLA', 'IBM','YELP', 'MSFT']
-    # Google Finance API
-    API='google'
-
-    save_file_path = 'datasets/business.csv'
-    # Intervalo de tiempo para carga de los datos[start-end]
-    #Fecha de Inicio
-    start = datetime.datetime(2009, 1, 1)
-    #Fecha Fin
-    end = datetime.datetime(2017, 6, 3)
-
-    data_file=loadDataApi.loadDataFromAPI(stocks[0],start,end,API)
-    #loadDataApi.printData(data_file)
-    data_proccess=loadDataApi.preprocess_data(data_file)
-
-    loadDataApi.save_data(save_file_path,data_proccess)
-
-    #print('\n ',data_proccess[:10])
-
-    print("\t ***   Finalized  data load    ***\n")
+    loadDataApi=LoadDataAPI()
+    loadDataApi.beginLoadData()
 
 if __name__ == '__main__':
 	main()

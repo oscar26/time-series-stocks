@@ -33,7 +33,7 @@ class NaivePredictor(object):
 		fmt = DataFormatter()
 		tscv = TimeSeriesSplit(n_splits=n_splits)
 		for j in xrange(cv_runs):
-			# print('\nCross-validation run %i' % (j+1))
+			#print('\nCross-validation run %i' % (j+1))
 			i = 1
 			for train_index, test_index in tscv.split(self.data['Close'].values):
 				# División del conjunto de datos en entrenamiento y prueba
@@ -114,29 +114,33 @@ class NaivePredictor(object):
 		"""Preprocesamiento del conjunto de datos."""
 		if (self.data is None):
 			df = pd.read_csv(self.dataset_path)
-			df['Close'] = df['Adj Close'] # DELETE
+			#df['Close'] = df['Adj Close'] # DELETE
 			date = pd.to_datetime(df['Date'])
 			df.insert(0, 'Month', date.dt.month)
 			df.insert(1, 'Day', date.dt.day)
-			df = df.drop('Adj Close', axis=1)
-			df = df.drop('Date', axis=1)
+			#df = df.drop('Adj Close', axis=1)
+			#df = df.drop('Date', axis=1)
 			new_column_order = ['Month', 'Day', 'Volume', 'Open', 'High', 'Low', 'Close']
 			self.data = df.reindex(columns=new_column_order)
 		else:
 			pass
+	def tester():
+		"""Método exclusivo para pruebas locales de funcionamiento."""
+		columns_to_standardize = ['Volume', 'Open', 'High', 'Low', 'Close']
+		columns_to_windowize = [2, 3, 4, 5, 6]
+		input_window_size = 5
+		dataset_path = "datasets/AAPL.csv"
+		predictor = NaivePredictor(dataset_path,
+			columns_to_standardize=columns_to_standardize,
+			columns_to_windowize=columns_to_windowize,
+			input_window_size=input_window_size)
+		predictor.compile_model()
+		predictor.test_model(n_splits=9, epochs=90, verbose=0)
 
 def test():
-	"""Método exclusivo para pruebas locales de funcionamiento."""
-	columns_to_standardize = ['Volume', 'Open', 'High', 'Low', 'Close']
-	columns_to_windowize = [2, 3, 4, 5, 6]
-	input_window_size = 5
-	dataset_path = "datasets/AAPL.csv"
-	predictor = NaivePredictor(dataset_path,
-		columns_to_standardize=columns_to_standardize,
-		columns_to_windowize=columns_to_windowize,
-		input_window_size=input_window_size)
-	predictor.compile_model()
-	predictor.test_model(n_splits=9, epochs=90, verbose=0)
+	naivePredictor=NaivePredictor()
+	naivePredictor.tester()
+
 
 if __name__ == '__main__':
 	test()
