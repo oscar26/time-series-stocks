@@ -22,38 +22,16 @@ class LoadDataAPI(object):
         np.savetxt(path, df.as_matrix(), delimiter=',')
 
 
-    def windowize_series(self, data, size=2, horizon=1, column_indexes=None):
-        '''Last column of the dataframe must be the target Y.
-    	'''
-
-        #print (all_indexes)
-        if type(data).__module__ != np.__name__:
-            raise('The data must be a numpy array.')
-        if data is None or data.size == 0:
-            raise('The array is none or empty.')
-
-        num_windows = data.shape[0] -size - horizon + 1
-        if column_indexes is None:
-            input_vector_length = data.shape[1] * size
-        else:
-            input_vector_length = size*len(column_indexes) + data.shape[1] - len(column_indexes)
-            all_indexes = range(data.shape[1])
-            ignored_indexes = [index for index in all_indexes if index not in column_indexes]
-
-
-        X = np.zeros((num_windows, input_vector_length))
-        Y = data[size+horizon-1:, data.shape[1]-1]
-
-        for i in range(num_windows):
-            if column_indexes is None:
-                X[i, :] = np.reshape(data[i:i+size, :], size*data.shape[1], order='F')
-                print (X)
-            else:
-                input_vector = np.reshape(data[i:i+size, column_indexes], input_vector_length - len(ignored_indexes), order='F')
-                input_vector = np.insert(input_vector, 0, data[i, ignored_indexes])
-                X[i, :] = input_vector
-        return X, Y
-
+    def preprocess_data(self,data_file):
+        """Preprocesamiento del conjunto de datos."""
+        df = data_file.reset_index()
+        date = pd.to_datetime(df['Date'])
+        df.insert(0, 'Month', date.dt.month)
+        df.insert(1, 'Day', date.dt.day)
+        df = df.drop('Date', axis=1)
+        new_column_order = ['Month', 'Day', 'Volume', 'Open', 'High', 'Low', 'Close']
+        data = df.reindex(columns=new_column_order)
+        return data
 
 def main():
     loadDataApi=LoadDataAPI();
@@ -62,7 +40,7 @@ def main():
     # Google Finance API
     API='google'
 
-    save_file_path = 'datasets/df-business.csv'
+    save_file_path = 'datasets/business.csv'
     # Intervalo de tiempo para carga de los datos[start-end]
     #Fecha de Inicio
     start = datetime.datetime(2009, 1, 1)
@@ -70,13 +48,14 @@ def main():
     end = datetime.datetime(2017, 6, 3)
 
     data_file=loadDataApi.loadDataFromAPI(stocks[0],start,end,API)
-    loadDataApi.printData(data_file)
+    #loadDataApi.printData(data_file)
+    data_proccess=loadDataApi.preprocess_data(data_file)
 
-    loadDataApi.save_data(save_file_path,data_file)
-    print("\t Generate windowize series \n\n")
-    X,Y=loadDataApi.windowize_series(data_file.as_matrix(),4,1)
+    loadDataApi.save_data(save_file_path,data_proccess)
 
-    #print(X)
+    #print('\n ',data_proccess[:10])
+
+    print("\t ***   Finalized  data load    ***\n")
 
 if __name__ == '__main__':
 	main()
