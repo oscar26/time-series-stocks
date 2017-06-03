@@ -11,7 +11,7 @@ from keras.layers import Input, Dense
 
 class NaivePredictor(object):
 	"""docstring for NaivePredictor"""
-	def __init__(self, dataset_path,	input_window_size=4, rolling_window_size=5,
+	def __init__(self, dataset_path=None,	input_window_size=4, rolling_window_size=5,
 			columns_to_standardize=None, columns_to_windowize=None, data=None):
 		self.dataset_path = dataset_path
 		self.input_window_size = input_window_size
