@@ -12,10 +12,10 @@ def doNothing():
 # ******************+
 # Configurar Vetana
 root.geometry("1000x600+0+0")
-
+root.configure(bg="blue")
 
 # fondo
-root.configure(bg="blue")
+
 filename = PhotoImage(file = "./images/fondo5.png")
 background_label = Label(root, image=filename)
 background_label.place(x=0, y=0, relwidth=1, relheight=1)
