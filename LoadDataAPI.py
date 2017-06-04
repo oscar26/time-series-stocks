@@ -13,7 +13,7 @@ class LoadDataAPI(object):
         return data_file
 
     def printData(self,data_file):
-        print(data_file[:3])
+        print(data_file[:50])
         #print(data_file.tail())
 
     # Guardamos en un archivo csv, los datos de un DataFrame en un path especifico.
@@ -50,7 +50,7 @@ class LoadDataAPI(object):
             save_file_path = 'datasets/'+stock+'business.csv'
             data_file=loadDataApi.loadDataFromAPI(stock,start,end,API)
             data_proccess=loadDataApi.preprocess_data(data_file)
-            #loadDataApi.printData(data_proccess)
+            # loadDataApi.printData(data_file)
 
             loadDataApi.save_data(save_file_path,data_proccess)
             dataFrameList[stock]=data_proccess
