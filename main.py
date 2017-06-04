@@ -74,9 +74,9 @@ def main():
     for stock in dataFrameList:
         print (" ************************* "+stock+" ******************************\n")
         predictor_1(dataFrameList[stock])
-        predictor_2(dataFrameList[stock])
-        predictor_3(dataFrameList[stock])
-        predictor_4(dataFrameList[stock])
+        # predictor_2(dataFrameList[stock])
+        # predictor_3(dataFrameList[stock])
+        # predictor_4(dataFrameList[stock])
 
 
 
