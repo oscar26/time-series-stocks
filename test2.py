@@ -110,6 +110,20 @@ select_month.pack(side=LEFT,padx=1,fill=Y )
 label_day_pediction.pack(side=LEFT,fill=Y)
 select_day.pack(side=LEFT,padx=1,fill=Y )
 
+value_prediction=[0.0,0.0,0.0]
+widget1 = Label(root)
+widget2 = Label(root, text='El precio de Cierre es:', fg='white', bg='#78909C', font=("Helvetica", 24))
+
+widget3 = Label(root, text=str(value_prediction[0]) + ' Dólares', fg='white', bg='#E64A19', font=("Helvetica", 20))
+
+widget4 = Label(root, text='El Limite Inferior es :', fg='white', bg='#78909C', font=("Helvetica", 24))
+
+widget5 = Label(root, text=str(value_prediction[1]) + ' Dólares', fg='white', bg='#E64A19', font=("Helvetica", 20))
+
+widget6 = Label(root, text='El Limite Superior es :', fg='white', bg='#78909C', font=("Helvetica", 24))
+
+widget8 = Label(root, text=str(value_prediction[2]) + ' Dólares', fg='white', bg='#E64A19', font=("Helvetica", 20))
+
 
 # ouput
 def activateOuput(value_prediction):
@@ -123,19 +137,31 @@ def activateCanvas():
     canvas.pack(expand=YES, fill=BOTH, padx=200, pady=200)
     return canvas
 
-def activateLabels(canvas,value_prediction):
-    widget1 = Label(canvas)
+def activateLabels(canvas,value):
+    value_prediction=value
+ 
     widget1.pack(padx=20, pady=100)
-    widget2 = Label(canvas, text='Cierre de la Bolsa es de :', fg='white', bg='#78909C', font=("Helvetica", 24))
     widget2.pack(padx=10, pady=10)
-    widget3 = Label(canvas, text=str(value_prediction) + ' Dolares', fg='white', bg='#E64A19', font=("Helvetica", 20))
+    widget3.configure(text=str(value_prediction[0]) + ' Dólares', fg='white', bg='#E64A19', font=("Helvetica", 20))
     widget3.pack()
+    widget4.pack(padx=10, pady=10)
+    widget5.configure(text=str(value_prediction[1]) + ' Dólares', fg='white', bg='#E64A19', font=("Helvetica", 20))
+    widget5.pack()
+    widget6.pack(padx=10, pady=10)
+    widget8.configure(text=str(value_prediction[2]) + ' Dólares', fg='white', bg='#E64A19', font=("Helvetica", 20))
+    widget8.pack()
 
 
 
 
 def beginPrediction(event):
-
+    widget1.pack_forget()
+    widget2.pack_forget()
+    widget3.pack_forget()
+    widget4.pack_forget()
+    widget5.pack_forget()
+    widget6.pack_forget()
+    widget8.pack_forget()
     business = isSelectBusinness.get()
     year = entry_year_pediction.get()
     month = isSelectMonth.get()

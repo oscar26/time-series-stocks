@@ -124,12 +124,21 @@ def activateCanvas():
     return canvas
 
 def activateLabels(canvas,value_prediction):
+
     widget1 = Label(canvas)
     widget1.pack(padx=20, pady=100)
-    widget2 = Label(canvas, text='Cierre de la Bolsa es de :', fg='white', bg='#78909C', font=("Helvetica", 24))
+    widget2 = Label(canvas, text='El precio de Cierre es:', fg='white', bg='#78909C', font=("Helvetica", 24))
     widget2.pack(padx=10, pady=10)
-    widget3 = Label(canvas, text=str(value_prediction) + ' Dolares', fg='white', bg='#E64A19', font=("Helvetica", 20))
+    widget3 = Label(canvas, text=str(value_prediction[0]) + ' Dólares', fg='white', bg='#E64A19', font=("Helvetica", 20))
     widget3.pack()
+    widget4 = Label(canvas, text='El Limite Inferior es :', fg='white', bg='#78909C', font=("Helvetica", 24))
+    widget4.pack(padx=10, pady=10)
+    widget5 = Label(canvas, text=str(value_prediction[1]) + ' Dólares', fg='white', bg='#E64A19', font=("Helvetica", 20))
+    widget5.pack()
+    widget6 = Label(canvas, text='El Limite Superior es :', fg='white', bg='#78909C', font=("Helvetica", 24))
+    widget6.pack(padx=10, pady=10)
+    widget8 = Label(canvas, text=str(value_prediction[2]) + ' Dólares', fg='white', bg='#E64A19', font=("Helvetica", 20))
+    widget8.pack()
 
 
 

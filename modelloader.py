@@ -36,5 +36,14 @@ def test():
 			else:
 				predictor = loader.load_predictor(predictor_name, stock, 'NaivePredictor')
 
+def test_model():
+	predictor_name = 'predictor_1_'
+	stock = 'AAPL'
+	loader = ModelLoader()
+	predictor = loader.load_predictor(predictor_name, stock, 'NaivePredictor')
+	prediction = predictor.predict()
+	print prediction
+
 if __name__ == '__main__':
-	test()
+	# test()
+	test_model()
