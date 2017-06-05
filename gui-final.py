@@ -2,7 +2,7 @@
 # -*- coding: 850 -*-
 import  unicodedata
 from Tkinter import *
-
+from PIL import Image, ImageTk
 
 from parameterGUI import ParameterGUI
 
@@ -15,12 +15,12 @@ def doNothing():
 
 # ******************+
 # Configurar Vetana
-root.geometry("1000x600+0+0")
+root.geometry("1200x600+0+0")
 root.configure(bg="blue")
 
 # fondo
 
-filename = PhotoImage(file = "./images/fondo5.png")
+filename = ImageTk.PhotoImage(file = "./images/fondo5.png")
 background_label = Label(root, image=filename)
 background_label.place(x=0, y=0, relwidth=1, relheight=1)
 
