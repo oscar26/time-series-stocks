@@ -1,0 +1,1 @@
+{"columns_to_windowize": [0], "column_stds": {}, "columns_to_standardize": [], "column_means": {}, "input_window_size": 20, "dataset_path": "saved_models/predictor_6_AAPL_input_data.pkl"}
