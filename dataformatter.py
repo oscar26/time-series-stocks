@@ -22,7 +22,7 @@ class DataFormatter(object):
 			raise('The data must be a numpy array.')
 		if data is None or data.size == 0:
 			raise('The array is none or empty.')
-		num_windows = data.shape[0] -size - horizon + 1
+		num_windows = data.shape[0] - size - horizon + 1
 		if column_indexes is None:
 			input_vector_length = data.shape[1] * size
 		else:
@@ -39,6 +39,18 @@ class DataFormatter(object):
 				input_vector = np.insert(input_vector, 0, data[i, ignored_indexes])
 				X[i, :] = input_vector
 		return X, Y
+
+	def get_last_window(self, data, size=10, horizon=1, column_indexes=None):
+		num_windows = data.shape[0] - size - horizon + 1
+		if column_indexes is None:
+			last_window = np.reshape(data[-size:, :], size*data.shape[1], order='F')
+		else:
+			input_vector_length = size*len(column_indexes) + data.shape[1] - len(column_indexes)
+			all_indexes = xrange(data.shape[1])
+			ignored_indexes = [index for index in all_indexes if index not in column_indexes]
+			last_window = np.reshape(data[-size:, column_indexes], input_vector_length - len(ignored_indexes), order='F')
+			last_window = np.insert(last_window, 0, data[-size, ignored_indexes])
+		return last_window
 
 def main():
 	file_path = 'datasets/dummyData.csv'
