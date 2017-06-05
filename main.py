@@ -1,5 +1,6 @@
 from LoadDataAPI import LoadDataAPI
 from naivepredictor import NaivePredictor
+from transformpredictor import TransformPredictor
 
 def predictor_1(data):
     columns_to_standardize = ['Volume', 'Open', 'High', 'Low', 'Close']
@@ -60,6 +61,32 @@ def predictor_4(data):
     predictor.test_model(n_splits=9, epochs=90, verbose=0)
     printData('predictor_4',predictor.train_results,predictor.test_results)
 
+def predictor_5(data):
+    df = data.drop('Volume', axis=1).drop('Open', axis=1).drop('High', axis=1).drop('Low', axis=1)
+    columns_to_standardize = []
+    columns_to_windowize = [2]
+    input_window_size = 20
+    predictor = TransformPredictor(columns_to_standardize=columns_to_standardize,
+        columns_to_windowize=columns_to_windowize,
+        input_window_size=input_window_size,
+        data=df)
+    predictor.compile_model()
+    predictor.test_model(n_splits=9, epochs=100, verbose=0)
+    printData('predictor_5', predictor.train_results, predictor.test_results)
+
+def predictor_6(data):
+    df = data.drop('Volume', axis=1).drop('Open', axis=1).drop('High', axis=1).drop('Low', axis=1).drop('Month', axis=1).drop('Day', axis=1)
+    columns_to_standardize = []
+    columns_to_windowize = [0]
+    input_window_size = 20
+    predictor = TransformPredictor(columns_to_standardize=columns_to_standardize,
+        columns_to_windowize=columns_to_windowize,
+        input_window_size=input_window_size,
+        data=df)
+    predictor.compile_model()
+    predictor.test_model(n_splits=9, epochs=100, verbose=0)
+    printData('predictor_6', predictor.train_results, predictor.test_results)
+
 def printData(msn,train_score,test_score):
     print(msn)
     print('Train Score: %.5f MSE, %.5f RMSE, %.5f MAE, %.5f%% MAPE' % (train_score[0], train_score[1], train_score[2], train_score[3]))
@@ -73,10 +100,12 @@ def main():
 
     for stock in dataFrameList:
         print (" ************************* "+stock+" ******************************\n")
-        predictor_1(dataFrameList[stock])
+        # predictor_1(dataFrameList[stock])
         # predictor_2(dataFrameList[stock])
         # predictor_3(dataFrameList[stock])
         # predictor_4(dataFrameList[stock])
+        predictor_5(dataFrameList[stock])
+        predictor_6(dataFrameList[stock])
 
 
 
