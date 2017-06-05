@@ -2,6 +2,7 @@
 # -*- coding: 850 -*-
 import  unicodedata
 from Tkinter import *
+from PIL import Image, ImageTk
 
 from parameterGUI import ParameterGUI
 
@@ -14,12 +15,12 @@ def doNothing():
 
 # ******************+
 # Configurar Vetana
-root.geometry("1000x600+0+0")
+root.geometry("1200x600+0+0")
 root.configure(bg="blue")
 
 # fondo
 
-filename = PhotoImage(file = "./images/fondo5.png")
+filename = ImageTk.PhotoImage(file = "./images/fondo5.png")
 background_label = Label(root, image=filename)
 background_label.place(x=0, y=0, relwidth=1, relheight=1)
 
@@ -96,7 +97,7 @@ label_day_pediction=Label(toolbar, text="      Dia:     ")
 entry_year_pediction=Entry(toolbar)
 
 label_name_business.pack(side=LEFT, padx=1 ,fill=Y)
-select_listBusiness.pack(side=LEFT,padx=1,fill=Y )
+select_listBusiness.pack(side=LEFT,padx=1,fill=Y)
 
 label_date_pediction.pack(side=LEFT,fill=Y)
 
@@ -111,13 +112,26 @@ select_day.pack(side=LEFT,padx=1,fill=Y )
 
 
 # ouput
-def activateCanvas(value_prediction):
-    canvas = Canvas(width=300, height=300, bg='white')
-    canvas.pack(expand=YES, fill=BOTH, padx=300, pady=200)
-    widget = Label(canvas, text='Cierre de la Bolsa es de :', fg='white', bg='black')
-    widget.pack(padx=40, pady=30)
-    widget = Label(canvas, text=str(value_prediction)+' Dolares', fg='white', bg='red')
+def activateOuput(value_prediction):
+    #canvas=activateCanvas()
+    activateLabels(root,value_prediction)
+    #activateLabelsAux(root,value_prediction)
+
+
+def activateCanvas():
+    canvas = Canvas(width=390, height=300, bg='#78909C')
+    canvas.pack(expand=YES, fill=BOTH, padx=200, pady=200)
+    return canvas
+
+def activateLabels(canvas,value_prediction):
+    widget = Label(canvas)
+    widget.pack(padx=20, pady=100)
+    widget = Label(canvas, text='Cierre de la Bolsa es de :', fg='white', bg='#78909C', font=("Helvetica", 24))
+    widget.pack(padx=10, pady=10)
+    widget = Label(canvas, text=str(value_prediction) + ' Dolares', fg='white', bg='#E64A19', font=("Helvetica", 20))
     widget.pack()
+
+
 
 
 def beginPrediction(event):
@@ -136,11 +150,11 @@ def beginPrediction(event):
 
     parameterGUI = ParameterGUI()
     value_prediction=parameterGUI.beginAnlysis(business,year,month,day)
-    activateCanvas(value_prediction)
+    activateOuput(value_prediction)
 
 
 
-button_1=Button(toolbar, text="         Empezar          ", bg="#A1887F")
+button_1=Button(toolbar, text="         Empezar          ", bg="#FF5722",activebackground="#D84315",cursor="hand1")
 button_1.bind("<Button-1>",beginPrediction)
 button_1.pack(side=RIGHT,fill=Y)
 
