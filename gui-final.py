@@ -3,6 +3,7 @@
 import  unicodedata
 from Tkinter import *
 from PIL import Image, ImageTk
+#sudo apt-get install python-imaging-tk
 
 from parameterGUI import ParameterGUI
 
@@ -111,6 +112,15 @@ label_day_pediction.pack(side=LEFT,fill=Y)
 select_day.pack(side=LEFT,padx=1,fill=Y )
 
 
+value_prediction=0.0
+widget1 = Label(root)
+widget2 = Label(root, text='Cierre de la Bolsa es de :', fg='white', bg='#78909C', font=("Helvetica", 24))
+widget3 = Label(root, text=str(value_prediction) + ' Dólares', fg='white', bg='#E64A19', font=("Helvetica", 20))
+widget2 = Label(root, text='El Limite Inferior es :', fg='white', bg='#78909C', font=("Helvetica", 24))
+widget3 = Label(root, text=str(value_prediction) + ' Dólares', fg='white', bg='#E64A19', font=("Helvetica", 20))
+widget2 = Label(root, text='El Limite Superior es :', fg='white', bg='#78909C', font=("Helvetica", 24))
+widget3 = Label(root, text=str(value_prediction) + ' Dólares', fg='white', bg='#E64A19', font=("Helvetica", 20))
+
 # ouput
 def activateOuput(value_prediction):
     #canvas=activateCanvas()
@@ -123,19 +133,21 @@ def activateCanvas():
     canvas.pack(expand=YES, fill=BOTH, padx=200, pady=200)
     return canvas
 
-def activateLabels(canvas,value_prediction):
-    widget = Label(canvas)
-    widget.pack(padx=20, pady=100)
-    widget = Label(canvas, text='Cierre de la Bolsa es de :', fg='white', bg='#78909C', font=("Helvetica", 24))
-    widget.pack(padx=10, pady=10)
-    widget = Label(canvas, text=str(value_prediction) + ' Dolares', fg='white', bg='#E64A19', font=("Helvetica", 20))
-    widget.pack()
+def activateLabels(canvas,value):
+    value_prediction=value
+    widget3.config(text=str(value_prediction) + ' Dolares', fg='white', bg='#E64A19', font=("Helvetica", 20))
+    widget1.pack(padx=20, pady=100)
+    widget2.pack(padx=10, pady=10)
+    widget3.pack()
 
 
 
 
 def beginPrediction(event):
-
+    widget1.pack_forget()
+    widget2.pack_forget()
+    widget3.pack_forget()
+    #widget1.pack_forget()
     business = isSelectBusinness.get()
     year = entry_year_pediction.get()
     month = isSelectMonth.get()
