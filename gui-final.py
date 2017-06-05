@@ -1,7 +1,10 @@
-# coding: utf-8
+# -*- coding: utf-8 -*-
+# -*- coding: 850 -*-
+import  unicodedata
 from Tkinter import *
-from PIL import Image, ImageTk
-#sudo apt-get install python-imaging-tk
+
+from parameterGUI import ParameterGUI
+
 root= Tk()
 
 
@@ -46,9 +49,9 @@ editMenu.add_separator()
 editMenu.add_command(label="Undo ",command=doNothing)
 
 # ***********  TOOLBAR  ******
-toolbar=Frame(root,bg="green")
+toolbar=Frame(root,bg="#78909C")
 
-msn_parameter=Label(toolbar,bg="red", text="Parametros: ")
+msn_parameter=Label(toolbar,bg="#1E88E5", text="Parámetros: ")
 
 msn_parameter.pack(side=LEFT,fill=Y)
 
@@ -84,11 +87,11 @@ select_month = apply(OptionMenu, (toolbar, isSelectMonth) + tuple(OPTIONS_MONTH)
 select_day= apply(OptionMenu, (toolbar, isSelectDay) + tuple(OPTIONS_DAY))
 
 
-label_name_business=Label(toolbar, text="Nombre de la Empresa? ")
-label_date_pediction=Label(toolbar, text="Fecha que desea Predecir? ")
-label_year_pediction=Label(toolbar,  text="Year:")
-label_month_pediction=Label(toolbar, text="Mes:")
-label_day_pediction=Label(toolbar, text="Dia:")
+label_name_business=Label(toolbar, text="    Nombre de la Empresa? ")
+label_date_pediction=Label(toolbar, text="   Fecha que desea Predecir? ")
+label_year_pediction=Label(toolbar,  text=" Año: ")
+label_month_pediction=Label(toolbar, text="   Mes:    ")
+label_day_pediction=Label(toolbar, text="      Dia:     ")
 
 entry_year_pediction=Entry(toolbar)
 
@@ -107,7 +110,14 @@ label_day_pediction.pack(side=LEFT,fill=Y)
 select_day.pack(side=LEFT,padx=1,fill=Y )
 
 
-
+# ouput
+def activateCanvas(value_prediction):
+    canvas = Canvas(width=300, height=300, bg='white')
+    canvas.pack(expand=YES, fill=BOTH, padx=300, pady=200)
+    widget = Label(canvas, text='Cierre de la Bolsa es de :', fg='white', bg='black')
+    widget.pack(padx=40, pady=30)
+    widget = Label(canvas, text=str(value_prediction)+' Dolares', fg='white', bg='red')
+    widget.pack()
 
 
 def beginPrediction(event):
@@ -124,26 +134,27 @@ def beginPrediction(event):
 
     print("Series de Tiempo!")
 
-    activateCanvas()
+    parameterGUI = ParameterGUI()
+    value_prediction=parameterGUI.beginAnlysis(business,year,month,day)
+    activateCanvas(value_prediction)
 
 
 
-button_1=Button(toolbar, text="Empezar")
+button_1=Button(toolbar, text="         Empezar          ", bg="#A1887F")
 button_1.bind("<Button-1>",beginPrediction)
-button_1.pack(side=RIGHT, padx=2,pady=2)
+button_1.pack(side=RIGHT,fill=Y)
+
+# *******************************
+# ***********  Status BAR  ******
+# *******************************
+status=Label(root, text="Universidad Nacional de Colombia",bd=1,relief=SUNKEN,anchor=W)
+status.pack(side=BOTTOM,fill=X)
+root.mainloop()
 
 
 
 
-# ouput
-def activateCanvas():
-    canvas = Canvas(width=300, height=300, bg='white')
-    canvas.pack(expand=YES, fill=BOTH, padx=300, pady=200)
 
-    widget = Label(canvas, text='Cierre de la Bolda es de :', fg='white', bg='black')
-    widget.pack(padx=40, pady=30)
-    widget = Label(canvas, text='43545.32 Dolares', fg='white', bg='red')
-    widget.pack()
 
 
 
