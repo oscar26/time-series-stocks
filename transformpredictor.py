@@ -21,6 +21,26 @@ class TransformPredictor(object):
 		self.__preprocess_data()
 		self.__create_model()
 
+	def predict(self, point):
+		"""Point debe ser un Data Frame de Pandas con las información
+		necesaria para realizar la predicción."""
+		# 1. Standardize point with training mean and standard deviation.
+		# 2. Add it to the data.
+		# 3. Windowize without Y (TODO: modify data formatter).
+		# 4. Extract the last window.
+		# 5. Make the prediction.
+		# 6. Transform back the prediction.
+
+	def fit_model(self, epochs=200, verbose=0):
+		"""Entrenar el modelo para producción."""
+		# Patching
+		self.column_means = {}
+		self.column_stds = {}
+		# Windowize dataset
+		fmt = DataFormatter()
+		self.X, self.Y = fmt.windowize_series(self.data.as_matrix(), size=self.input_window_size, column_indexes=self.columns_to_windowize)
+		self.model.fit(self.X, self.Y, epochs=epochs, batch_size=32, verbose=verbose)
+
 	def test_model(self, n_splits=9, cv_runs=10, epochs=100, verbose=2):
 		"""Evaluación del modelo usando validación cruzada
 		hacia adelante."""
