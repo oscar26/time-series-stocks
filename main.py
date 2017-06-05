@@ -111,7 +111,8 @@ def print_data(msn, train_score, test_score):
 
 def save_model(predictor, file_name):
     # Guardado de la red neuronal
-    predictor.model.save('saved_models/' + file_name + '.h5')
+    model_path = 'saved_models/' + file_name + '.h5'
+    predictor.model.save(model_path)
     # Guardado de metadatos sobre el predictor
     dataset_path = 'saved_models/' + file_name + '_input_data.pkl'
     predictor.data.to_pickle(dataset_path)
@@ -121,7 +122,8 @@ def save_model(predictor, file_name):
         'columns_to_standardize': predictor.columns_to_standardize,
         'column_means': predictor.column_means,
         'column_stds': predictor.column_stds,
-        'dataset_path': dataset_path
+        'dataset_path': dataset_path,
+        'model_path': model_path
     }
     metadata_path = 'saved_models/' + file_name + '_metadata.json'
     with open(metadata_path, 'w') as fp:

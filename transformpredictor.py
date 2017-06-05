@@ -21,15 +21,31 @@ class TransformPredictor(object):
 		self.__preprocess_data()
 		self.__create_model()
 
-	def predict(self, point):
+	def predict(self, point, last_price):
 		"""Point debe ser un Data Frame de Pandas con las información
 		necesaria para realizar la predicción."""
 		# 1. Standardize point with training mean and standard deviation.
+		test_data = self.__standardize_features_for_test(point, self.columns_to_standardize, self.column_means, self.column_stds)
 		# 2. Add it to the data.
-		# 3. Windowize without Y (TODO: modify data formatter).
+		df = pd.concat([self.data, test_data])
+		# 3. Windowize.
+		fmt = DataFormatter()
+		X, Y = fmt.windowize_series(df.as_matrix(), size=self.input_window_size, column_indexes=self.columns_to_windowize)
 		# 4. Extract the last window.
-		# 5. Make the prediction.
-		# 6. Transform back the prediction.
+		last_window = fmt.get_last_window(df.as_matrix(), size=self.input_window_size, column_indexes=self.columns_to_windowize)
+		# 5. Compute the error.
+		train_score = self.model.evaluate(X, Y, verbose=0)
+		train_score = np.array([train_score[0], np.sqrt(train_score[0]), train_score[1], train_score[2]*100])
+		# 6. Make the prediction.
+		prediction = self.model.predict(last_window)
+		# 7. Computing prediction intervals
+		pred_upper = prediction + 1.96 * train_score[1]
+		pred_lower = prediction - 1.96 * train_score[1]
+		# 8. Transform back the prediction.
+		prediction = last_price * np.exp(prediction)
+		pred_upper = last_price * np.exp(pred_upper)
+		pred_lower = last_price * np.exp(pred_lower)
+		return prediction, [pred_lower, pred_upper]
 
 	def fit_model(self, epochs=200, verbose=0):
 		"""Entrenar el modelo para producción."""
