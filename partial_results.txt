@@ -138,3 +138,87 @@ Test Score: 0.10611 MSE, 0.23709 RMSE, 0.10611 MAE, 17.09588% MAPE
 predictor_4
 Train Score: 0.00672 MSE, 0.08097 RMSE, 0.00672 MAE, 5.84239% MAPE
 Test Score: 0.06727 MSE, 0.22020 RMSE, 0.06727 MAE, 15.87896% MAPE
+
+
+####################### Predictors 5 and 6 #######################
+
+ ************************* BABA ******************************
+
+predictor_5
+Train Score: 0.00047 MSE, 0.02148 RMSE, 0.00047 MAE, 1.59455% MAPE
+Test Score: 0.00063 MSE, 0.01954 RMSE, 0.00063 MAE, 1.41023% MAPE
+predictor_6
+Train Score: 0.00044 MSE, 0.02108 RMSE, 0.00044 MAE, 1.57510% MAPE
+Test Score: 0.00037 MSE, 0.01825 RMSE, 0.00037 MAE, 1.38027% MAPE
+ ************************* NKE ******************************
+
+predictor_5
+Train Score: 0.00032 MSE, 0.01781 RMSE, 0.00032 MAE, 1.26210% MAPE
+Test Score: 0.00021 MSE, 0.01433 RMSE, 0.00021 MAE, 1.00215% MAPE
+predictor_6
+Train Score: 0.00035 MSE, 0.01837 RMSE, 0.00035 MAE, 1.31658% MAPE
+Test Score: 0.00029 MSE, 0.01570 RMSE, 0.00029 MAE, 1.14881% MAPE
+ ************************* TSLA ******************************
+
+predictor_5
+Train Score: 0.00143 MSE, 0.03631 RMSE, 0.00143 MAE, 2.55615% MAPE
+Test Score: 0.01111 MSE, 0.04024 RMSE, 0.01111 MAE, 2.83024% MAPE
+predictor_6
+Train Score: 0.00135 MSE, 0.03606 RMSE, 0.00135 MAE, 2.53460% MAPE
+Test Score: 0.00096 MSE, 0.03002 RMSE, 0.00096 MAE, 2.16408% MAPE
+ ************************* IBM ******************************
+
+predictor_5
+Train Score: 0.00022 MSE, 0.01395 RMSE, 0.00022 MAE, 1.00338% MAPE
+Test Score: 0.00442 MSE, 0.01981 RMSE, 0.00442 MAE, 1.32257% MAPE
+predictor_6
+Train Score: 0.00018 MSE, 0.01336 RMSE, 0.00018 MAE, 0.95932% MAPE
+Test Score: 0.00014 MSE, 0.01163 RMSE, 0.00014 MAE, 0.84759% MAPE
+ ************************* AAPL ******************************
+
+predictor_5
+Train Score: 0.00043 MSE, 0.01911 RMSE, 0.00043 MAE, 1.40074% MAPE
+Test Score: 0.01195 MSE, 0.02795 RMSE, 0.01195 MAE, 1.96573% MAPE
+predictor_6
+Train Score: 0.00033 MSE, 0.01818 RMSE, 0.00033 MAE, 1.34600% MAPE
+Test Score: 0.00026 MSE, 0.01588 RMSE, 0.00026 MAE, 1.16387% MAPE
+ ************************* FB ******************************
+
+predictor_5
+Train Score: 0.00096 MSE, 0.03020 RMSE, 0.00096 MAE, 2.09222% MAPE
+Test Score: 0.00650 MSE, 0.02952 RMSE, 0.00650 MAE, 2.22770% MAPE
+predictor_6
+Train Score: 0.00096 MSE, 0.03044 RMSE, 0.00096 MAE, 2.12778% MAPE
+Test Score: 0.00144 MSE, 0.02591 RMSE, 0.00144 MAE, 1.99973% MAPE
+ ************************* BAC ******************************
+
+predictor_5
+Train Score: 0.00069 MSE, 0.02557 RMSE, 0.00069 MAE, 1.69944% MAPE
+Test Score: 0.00073 MSE, 0.02162 RMSE, 0.00073 MAE, 1.65678% MAPE
+predictor_6
+Train Score: 0.00216 MSE, 0.04472 RMSE, 0.00216 MAE, 2.69124% MAPE
+Test Score: 0.00046 MSE, 0.02016 RMSE, 0.00046 MAE, 1.53539% MAPE
+ ************************* AMZN ******************************
+
+predictor_5
+Train Score: 0.00063 MSE, 0.02460 RMSE, 0.00063 MAE, 1.71309% MAPE
+Test Score: 0.00040 MSE, 0.01946 RMSE, 0.00040 MAE, 1.37824% MAPE
+predictor_6
+Train Score: 0.00059 MSE, 0.02419 RMSE, 0.00059 MAE, 1.69734% MAPE
+Test Score: 0.00040 MSE, 0.01947 RMSE, 0.00040 MAE, 1.37796% MAPE
+ ************************* MSFT ******************************
+
+predictor_5
+Train Score: 0.00037 MSE, 0.01787 RMSE, 0.00037 MAE, 1.26609% MAPE
+Test Score: 0.00266 MSE, 0.01967 RMSE, 0.00266 MAE, 1.40131% MAPE
+predictor_6
+Train Score: 0.00030 MSE, 0.01715 RMSE, 0.00030 MAE, 1.20481% MAPE
+Test Score: 0.00020 MSE, 0.01387 RMSE, 0.00020 MAE, 1.00742% MAPE
+ ************************* NVDA ******************************
+
+predictor_5
+Train Score: 0.00090 MSE, 0.02984 RMSE, 0.00090 MAE, 2.18964% MAPE
+Test Score: 0.00067 MSE, 0.02422 RMSE, 0.00067 MAE, 1.68968% MAPE
+predictor_6
+Train Score: 0.00091 MSE, 0.02989 RMSE, 0.00091 MAE, 2.19748% MAPE
+Test Score: 0.00060 MSE, 0.02365 RMSE, 0.00060 MAE, 1.65622% MAPE
