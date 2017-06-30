@@ -1,3 +1,11 @@
+# Compiled models, datasets and results
+datasets/
+saved_models/
+results/
+
+# Sublime files
+*.sublime-*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

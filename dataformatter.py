@@ -27,11 +27,11 @@ class DataFormatter(object):
 			input_vector_length = data.shape[1] * size
 		else:
 			input_vector_length = size*len(column_indexes) + data.shape[1] - len(column_indexes)
-			all_indexes = xrange(data.shape[1])
+			all_indexes = range(data.shape[1])
 			ignored_indexes = [index for index in all_indexes if index not in column_indexes]
 		X = np.zeros((num_windows, input_vector_length))
 		Y = data[size+horizon-1:, data.shape[1]-1]
-		for i in xrange(num_windows):
+		for i in range(num_windows):
 			if column_indexes is None:
 				X[i, :] = np.reshape(data[i:i+size, :], size*data.shape[1], order='F')
 			else:
@@ -46,7 +46,7 @@ class DataFormatter(object):
 			last_window = np.reshape(data[-size:, :], size*data.shape[1], order='F')
 		else:
 			input_vector_length = size*len(column_indexes) + data.shape[1] - len(column_indexes)
-			all_indexes = xrange(data.shape[1])
+			all_indexes = range(data.shape[1])
 			ignored_indexes = [index for index in all_indexes if index not in column_indexes]
 			last_window = np.reshape(data[-size:, column_indexes], input_vector_length - len(ignored_indexes), order='F')
 			last_window = np.insert(last_window, 0, data[-size, ignored_indexes])

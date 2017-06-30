@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # -*- coding: 850 -*-
 import  unicodedata
-from Tkinter import *
+from tkinter import *
 from PIL import Image, ImageTk
 
 from parameterGUI import ParameterGUI
@@ -167,10 +167,10 @@ def beginPrediction(event):
     month = isSelectMonth.get()
     day = isSelectDay.get()
 
-    print  "Empresa ",business
-    print  "Año ", year
-    print  "Mes ", month
-    print  "Dia ", day
+    print("Empresa ",business)
+    print("Año ", year)
+    print("Mes ", month)
+    print("Dia ", day)
 
     print("Series de Tiempo!")
 

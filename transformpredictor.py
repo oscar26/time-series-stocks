@@ -3,6 +3,7 @@
 import numpy as np
 import pandas as pd
 from dataformatter import DataFormatter
+import json
 
 # Se usa Keras como la librería para manejar
 # las redes neuronales.
@@ -18,34 +19,41 @@ class TransformPredictor(object):
 		self.columns_to_standardize = columns_to_standardize
 		self.columns_to_windowize = columns_to_windowize
 		self.data = data
-		self.__preprocess_data()
+		if ('LogReturn' not in self.data.columns):
+			self.__preprocess_data()
 		self.__create_model()
 
-	def predict(self, point, last_price):
+	def predict(self, point=None):
 		"""Point debe ser un Data Frame de Pandas con las información
 		necesaria para realizar la predicción."""
 		# 1. Standardize point with training mean and standard deviation.
-		test_data = self.__standardize_features_for_test(point, self.columns_to_standardize, self.column_means, self.column_stds)
 		# 2. Add it to the data.
-		df = pd.concat([self.data, test_data])
+		if point is None:
+			df = self.data
+		else:
+			test_data = self.__standardize_features_for_test(point, self.columns_to_standardize, self.column_means, self.column_stds)
+			df = pd.concat([self.data, test_data])
 		# 3. Windowize.
 		fmt = DataFormatter()
 		X, Y = fmt.windowize_series(df.as_matrix(), size=self.input_window_size, column_indexes=self.columns_to_windowize)
 		# 4. Extract the last window.
 		last_window = fmt.get_last_window(df.as_matrix(), size=self.input_window_size, column_indexes=self.columns_to_windowize)
+		last_window = last_window[None, :]
 		# 5. Compute the error.
 		train_score = self.model.evaluate(X, Y, verbose=0)
 		train_score = np.array([train_score[0], np.sqrt(train_score[0]), train_score[1], train_score[2]*100])
+		# print('\nTrain Score: %.5f MSE, %.5f RMSE, %.5f MAE, %.5f%% MAPE' % (train_score[0], train_score[1], train_score[2], train_score[3]))
 		# 6. Make the prediction.
-		prediction = self.model.predict(last_window)
+		prediction = np.squeeze(self.model.predict(last_window))
 		# 7. Computing prediction intervals
 		pred_upper = prediction + 1.96 * train_score[1]
 		pred_lower = prediction - 1.96 * train_score[1]
+		# print('\nRMSE: %.5f / Raw prediction: %.5f / Raw upper: %.5f / Raw lower: %.5f' % (train_score[1], prediction, pred_upper, pred_lower))
 		# 8. Transform back the prediction.
-		prediction = last_price * np.exp(prediction)
-		pred_upper = last_price * np.exp(pred_upper)
-		pred_lower = last_price * np.exp(pred_lower)
-		return prediction, [pred_lower, pred_upper]
+		prediction = self.last_price * np.exp(prediction)
+		pred_upper = self.last_price * np.exp(pred_upper)
+		pred_lower = self.last_price * np.exp(pred_lower)
+		return prediction, pred_lower, pred_upper
 
 	def fit_model(self, epochs=200, verbose=0):
 		"""Entrenar el modelo para producción."""
@@ -56,6 +64,12 @@ class TransformPredictor(object):
 		fmt = DataFormatter()
 		self.X, self.Y = fmt.windowize_series(self.data.as_matrix(), size=self.input_window_size, column_indexes=self.columns_to_windowize)
 		self.model.fit(self.X, self.Y, epochs=epochs, batch_size=32, verbose=verbose)
+		error = self.model.evaluate(self.X, self.Y, verbose=verbose)[2]*100
+		while error > 10.0:
+			print('Error: %.5f' % (error))
+			self.compile_model()
+			self.model.fit(self.X, self.Y, epochs=epochs, batch_size=32, verbose=verbose)
+			error = self.model.evaluate(self.X, self.Y, verbose=verbose)[2]*100
 
 	def test_model(self, n_splits=9, cv_runs=10, epochs=100, verbose=2):
 		"""Evaluación del modelo usando validación cruzada
@@ -67,7 +81,7 @@ class TransformPredictor(object):
 		test_scores = np.zeros((cv_runs, n_splits, len(self.metrics)))
 		fmt = DataFormatter()
 		tscv = TimeSeriesSplit(n_splits=n_splits)
-		for j in xrange(cv_runs):
+		for j in range(cv_runs):
 			# print('\nCross-validation run %i' % (j+1))
 			i = 1
 			for train_index, test_index in tscv.split(self.data['LogReturn'].values):
@@ -100,8 +114,8 @@ class TransformPredictor(object):
 				i += 1
 		self.train_results = train_scores.mean(axis=0).mean(axis=0)
 		self.test_results = test_scores.mean(axis=0).mean(axis=0)
-		# print(train_results)
-		# print(test_results)
+		print(train_results)
+		print(test_results)
 
 	def compile_model(self):
 		metrics = ['mean_squared_error', 'mean_absolute_error', 'mean_absolute_percentage_error']
@@ -129,13 +143,14 @@ class TransformPredictor(object):
 			raise('Passed column names is empty.')
 		column_means = {}
 		column_stds = {}
+		standardized_data = data.copy()
 		for column in columns:
-			mean = data.loc[:, column].mean()
-			std = data.loc[:, column].std()
-			data.loc[:, column] = (data.loc[:, column] - mean) / std
+			mean = standardized_data.loc[:, column].mean()
+			std = standardized_data.loc[:, column].std()
+			standardized_data.loc[:, column] = (standardized_data.loc[:, column] - mean) / std
 			column_means[column] = mean
 			column_stds[column] = std
-		return data, column_means, column_stds
+		return standardized_data, column_means, column_stds
 
 	def __standardize_features_for_test(self, data, columns, training_means, training_stds):
 		"""Estandarización de los datos de prueba usando la media
@@ -146,9 +161,10 @@ class TransformPredictor(object):
 			raise('Passed column names is None.')
 		if len(columns) == 0:
 			raise('Passed column names is empty.')
+		standardized_data = data.copy()
 		for column in columns:
-			data.loc[:, (column)] = (data.loc[:, (column)] - training_means[column]) / training_stds[column]
-		return data
+			standardized_data.loc[:, (column)] = (standardized_data.loc[:, (column)] - training_means[column]) / training_stds[column]
+		return standardized_data
 
 	def __preprocess_data(self):
 		"""Preprocesamiento del conjunto de datos."""
@@ -175,6 +191,8 @@ class TransformPredictor(object):
 			self.data = self.data.reindex(columns=['Month', 'Day', 'Close'])
 		# Transformación de no estacionario a estacionario
 		self.data.insert(self.data.shape[1], 'LogReturn', self.__compute_log_return(self.data['Close']))
+		self.last_price = self.data['Close'].iloc[-1]
+		print('Last price: ', self.last_price)
 		self.data.drop('Close', axis=1, inplace=True)
 		# Eliminación de la primera fila por contener un valor inválido
 		self.data.drop(self.data.index[0], inplace=True)
@@ -184,6 +202,30 @@ class TransformPredictor(object):
 		if prices.empty:
 			raise Exception('The data frame is empty.')
 		return np.log(prices) - np.log(prices.shift(1))
+
+	def save_predictor(self, name, symbol, name_delimiter='_'):
+	    # Guardado de la red neuronal
+	    file_name = name + name_delimiter + symbol
+	    model_path = 'saved_models/' + file_name + '.h5'
+	    self.model.save(model_path)
+	    # Guardado de metadatos sobre el predictor
+	    dataset_path = 'saved_models/' + file_name + '_input_data.pkl'
+	    self.data.to_pickle(dataset_path)
+	    metadata = {
+	    	'name': name,
+	    	'symbol': symbol,
+	        'input_window_size': self.input_window_size,
+	        'columns_to_windowize': self.columns_to_windowize,
+	        'columns_to_standardize': self.columns_to_standardize,
+	        'column_means': self.column_means,
+	        'column_stds': self.column_stds,
+	        'last_price': self.last_price,
+	        'dataset_path': dataset_path,
+	        'model_path': model_path
+	    }
+	    metadata_path = 'saved_models/' + file_name + '_metadata.json'
+	    with open(metadata_path, 'w') as fp:
+	        json.dump(metadata, fp)
 
 def test():
 	"""Método exclusivo para pruebas locales de funcionamiento."""
