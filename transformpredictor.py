@@ -67,6 +67,7 @@ class TransformPredictor(object):
 		error = self.model.evaluate(self.X, self.Y, verbose=verbose)[2]*100
 		while error > 10.0:
 			print('Error: %.5f' % (error))
+			self.__create_model()
 			self.compile_model()
 			self.model.fit(self.X, self.Y, epochs=epochs, batch_size=32, verbose=verbose)
 			error = self.model.evaluate(self.X, self.Y, verbose=verbose)[2]*100

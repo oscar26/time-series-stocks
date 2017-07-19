@@ -6,6 +6,7 @@ from itertools import chain
 from keras.models import load_model
 from naivepredictor import NaivePredictor
 from transformpredictor import TransformPredictor
+from dateutilities import DateUtilities
 
 class ModelLoader(object):
 	def load_predictor(self, name, symbol, predictor_type, name_delimiter='_'):
@@ -50,7 +51,8 @@ class ModelLoader(object):
 		result_summary = table.mean()
 		result_summary.name = 'Mean'
 		table = table.append(result_summary)
-		date = str((datetime.today() + timedelta(days=1)).date())
+		# Checking if next day is not weekend.
+		date = DateUtilities().get_next_trading_day()
 		table.to_csv(''.join(('results/', date, '_pred.csv')), float_format='%.2f')
 		print(table)
 
